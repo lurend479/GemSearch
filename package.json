@@ -1,0 +1,23 @@
+{
+  "name": "gemsearch",
+  "version": "1.0.0",
+  "description": "gemsearch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lurend479/GemSearch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lurend479/GemSearch/issues"
+  },
+  "homepage": "https://github.com/lurend479/GemSearch#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "jade": "^1.11.0"
+  }
+}

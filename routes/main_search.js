@@ -28,7 +28,7 @@ exports.main_search_result = function(req,res){
                 newsTitles.push(postTitle);
                 newsTitleHrefs.push(postHref);
                 }
-                console.log(body);
+                //console.log(body);
                 var postElements = loadBody("table .sj_ln");
                 postElements.each(parsingFunction);
 

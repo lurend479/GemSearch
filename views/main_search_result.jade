@@ -1,6 +1,16 @@
 html(lang="ko")
     head
         meta(charset="utf-8")
-        title 뉴스가 보고싶으면 뉴스고!
+        title 검색은 검색짜응한테 물어보라능!!
     body
+        div.all_news_box
+            h1(style="font-size:3em") 검색짜응!!
+            div.news_box
+                - for(var index = 0 ; index < searchTitles.length; ++index){
+                    table
+                        tbody
+                            tr
+                                td 
+                                    a(href=searchTitleHrefs[index] target="_blank") #{searchTitles[index]}
+                - }
         

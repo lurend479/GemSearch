@@ -14,7 +14,7 @@ var isEmpty = function(value){ if( value == "" || value == null || value == unde
 var searchTitles = [];
 var searchTitleHrefs = [];
 var count = 0;
-var fullCount = 1000;
+var fullCount = 300;
 exports.main_search_result = function(req,res){
 
     var keyword = req.body.search;

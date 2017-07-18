@@ -1,16 +1,27 @@
 html(lang="ko")
     head
         meta(charset="utf-8")
-        title 검색은 검색짜응한테 물어보라능!!
+        title 게임은 겜짜응한테 물어보라능!!
     body
         div.all_news_box
-            h1(style="font-size:3em") 검색짜응!!
+            h1(style="font-size:3em") 겜짜응!!
             div.news_box
-                - for(var index = 0 ; index < searchTitles.length; ++index){
+                - for(var index = 0 ; index < searchResultList.length; ++index){
                     table
                         tbody
                             tr
-                                td 
-                                    a(href=searchTitleHrefs[index] target="_blank") #{searchTitles[index]}
+                                h1 #{searchResultList[index].ResultSiteName}
+                                - if(searchResultList[index].GameSearchResultBaseDatas.length > 0){
+                                - for(var index_in = 0 ; index_in < searchResultList[index].GameSearchResultBaseDatas.length; ++index_in){
+                                    tr
+                                        td 
+                                            a(href=searchResultList[index].GameSearchResultBaseDatas[index_in].ResultUrl target="_blank") #{searchResultList[index].GameSearchResultBaseDatas[index_in].ResultStr}
+                                - }
+                                - }
+                                - else{
+                                    tr
+                                        td
+                                            p 검색결과가 없다능...
+                                - }
                 - }
         

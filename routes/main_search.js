@@ -60,7 +60,10 @@ var GameSearchBaseDatas = new Array(
         )),
     new GameSearchBaseData("롤",
         new Array(
-            new GameSearchSiteBaseData("인벤_오버워치_자유게시판", "http://www.inven.co.kr/board/powerbbs.php?name=subject&keyword=", "&come_idx=4538", Search_Inven)
+            new GameSearchSiteBaseData("인벤_롤_챔피언 공략 게시판", "http://lol.inven.co.kr/dataninfo/champion/manualTool.php?filter=subject&mode=search&searchname=", "&view=", Search_Inven_Champion),
+            new GameSearchSiteBaseData("인벤_롤_이슈/토론 게시판", "http://www.inven.co.kr/board/powerbbs.php?name=subject&keyword=", "&come_idx=2999", Search_Inven),
+            new GameSearchSiteBaseData("인벤_롤_사건/사고 게시판", "http://www.inven.co.kr/board/powerbbs.php?name=subject&keyword=", "&come_idx=2771", Search_Inven),
+            new GameSearchSiteBaseData("인벤_롤_유저팁 게시판", "http://www.inven.co.kr/board/powerbbs.php?name=subject&keyword=", "&come_idx=2766", Search_Inven)
         ))
 )
 var GameSearchResultData = function(resultSiteName, gameSearchResultBaseDatas)
@@ -88,6 +91,24 @@ function Search_Inven(loadBody)
     }
 
     var postElements = loadBody("table tr .tr");
+    postElements.each(parsingFunction);
+
+    return list;
+}
+function Search_Inven_Champion(loadBody)
+{
+    var list = [];
+    var parsingFunction = function(index, data) {
+        if(list.length > SearchResultCount)
+            return;
+
+        var postTitle = loadBody(data).find(".list").text();
+        var postHref = loadBody(data).find(".list").attr("href");
+        
+        list.push(new GameSearchResultBaseData(postTitle, "http://lol.inven.co.kr/dataninfo/champion/" + postHref));
+    }
+
+    var postElements = loadBody("table tr");
     postElements.each(parsingFunction);
 
     return list;
@@ -120,6 +141,7 @@ var SearchResultList = [];
 var SearchResultCount = 5;
 var SearchGameData;
 var GlobalResponse;
+var SearchLoading = false;
 function SiteSearchRequest(gameSearchSiteBaseData)
 {
     var searchFullurl = gameSearchSiteBaseData.SiteUrl_1 + urlencode(SearchKeyword) + gameSearchSiteBaseData.SiteUrl_2;
@@ -149,20 +171,33 @@ function CheckSiteSearchComplete()
 }
 
 exports.main_search = function(req,res){
-
+    SearchLoading = false;
+    GlobalResponse = null;
     fs.readFile("public/html/main_search.html",function(error, data){
         res.send(data.toString());
     });
 }
 
-exports.main_search_result = function(req,res){
+exports.main_search_loading = function(req,res){
+    //res.send("<h1>ㅁㄴㅇㄹ</h1>");
+    if(GlobalResponse === null)
+        GlobalResponse = res;
+}
 
-    SearchGameName = "오버워치";
+
+exports.main_search_result = function(req,res){
+    if(SearchLoading === true)
+    {
+        res.redirect("/search_loading");
+        return;
+    }
+    SearchLoading = true;
+    SearchGameName = req.body.GameType;
     SearchKeyword = req.body.search;
 
     SearchResultList = [];
     SearchGameData = null;
-    GlobalResponse = res;
+
     for(var index = 0 ;index < GameSearchBaseDatas.length ; ++index)
     {
         if(SearchGameName === GameSearchBaseDatas[index].GameName)
@@ -177,4 +212,6 @@ exports.main_search_result = function(req,res){
     {
         SiteSearchRequest(SearchGameData.GameSearchSiteBaseDatas[index]);
     }
+
+    res.redirect("/search_loading");
 }

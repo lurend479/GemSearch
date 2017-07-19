@@ -31,7 +31,6 @@ app.use(bodyParser.urlencoded({extended:false}));
 // exports객체를 이용 다른 객체에 있는 함수를 가져 올 수 있음
 // exports로 함수를 만들고 require로 추출(?)해서 사용 가능함
 app.get('/', routes.main_search);
-app.get('/search_loading', routes.main_search_loading);
 app.post('/', routes.main_search_result);
 
 // 웹사이트에서 볼때 소스를 이쁘게 나오게

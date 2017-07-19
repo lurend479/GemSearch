@@ -141,7 +141,6 @@ var SearchResultList = [];
 var SearchResultCount = 5;
 var SearchGameData;
 var GlobalResponse;
-var SearchLoading = false;
 function SiteSearchRequest(gameSearchSiteBaseData)
 {
     var searchFullurl = gameSearchSiteBaseData.SiteUrl_1 + urlencode(SearchKeyword) + gameSearchSiteBaseData.SiteUrl_2;
@@ -171,33 +170,18 @@ function CheckSiteSearchComplete()
 }
 
 exports.main_search = function(req,res){
-    SearchLoading = false;
-    GlobalResponse = null;
     fs.readFile("public/html/main_search.html",function(error, data){
         res.send(data.toString());
     });
 }
 
-exports.main_search_loading = function(req,res){
-    //res.send("<h1>ㅁㄴㅇㄹ</h1>");
-    if(GlobalResponse === null)
-        GlobalResponse = res;
-}
-
-
 exports.main_search_result = function(req,res){
-    if(SearchLoading === true)
-    {
-        res.redirect("/search_loading");
-        return;
-    }
-    SearchLoading = true;
     SearchGameName = req.body.GameType;
     SearchKeyword = req.body.search;
 
     SearchResultList = [];
     SearchGameData = null;
-
+    GlobalResponse = res;
     for(var index = 0 ;index < GameSearchBaseDatas.length ; ++index)
     {
         if(SearchGameName === GameSearchBaseDatas[index].GameName)
@@ -212,6 +196,4 @@ exports.main_search_result = function(req,res){
     {
         SiteSearchRequest(SearchGameData.GameSearchSiteBaseDatas[index]);
     }
-
-    res.redirect("/search_loading");
 }

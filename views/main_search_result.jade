@@ -3,16 +3,62 @@ html(lang="ko")
         meta(charset="utf-8")
         title 게임은 겜짜응한테 물어보라능!!
         script.
-            var test = "#{searchResultList}";
+            var searchResultList = !{JSON.stringify(searchResultList)};
+            
+            function onClickNextSearch()
+            {
+                return true;
+            }
+
+            var viewReusltTable = function(resultData) {
+                var resultView = new String();
+
+                resultView += "<table id=" + resultData.ResultSiteName + ">";
+                resultView += "<tr> <th>";
+                resultView += "<h1>" + resultData.ResultSiteName;
+                resultView += "</th> </tr>";
+                if(resultData.GameSearchResultBaseDatas.length > 0)
+                {
+                    for(var index = 0 ; index < resultData.GameSearchResultBaseDatas.length ; ++index)
+                    {
+                        resultView += "<tr> <td>";
+                        resultView += "<a href=" + resultData.GameSearchResultBaseDatas[index].ResultUrl + " target=\"_blank\">" 
+                            +  resultData.GameSearchResultBaseDatas[index].ResultStr;
+                        resultView += "</td> </tr>";
+                    }
+
+                    resultView += "<tr> <td>";
+                    resultView += "<form method=\"post\" onsubmit=\"return onClickNextSearch();\">";
+                    resultView += "<input type=\"submit\" title=\"NEXT\">";
+                    resultView += "<form>";
+                    resultView += "</td> </tr>";
+                }
+                else
+                {
+                    resultView += "<tr> <td>";
+                    resultView += "검색 결과가 없다능...";
+                    resultView += "</td> </tr>";
+                }
+                
+                resultView += "<table>";
+
+                return resultView;
+            }
+
             window.onload = function(){
-                //var test = searchResultList;
-                alert(test);
-                document.getElementById("test").innerHTML = test;
+                var resultView = new String();
+
+                for(var index = 0 ; index < searchResultList.length; ++index)
+                {
+                    resultView += viewReusltTable(searchResultList[index]);
+                }
+
+                document.getElementById("result_view").innerHTML = resultView;
             }
     body
         div.all_news_box
             h1(style="font-size:3em") 겜짜응!!
-            div(id="test")
+            div(id="result_view")
                 //- - for(var index = 0 ; index < searchResultList.length; ++index){
                 //-     table
                 //-         tbody

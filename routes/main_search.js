@@ -65,7 +65,7 @@ var GameSearchBaseDatas = new Array(
             new GameSearchSiteBaseData("인벤_롤_사건/사고 게시판", "http://www.inven.co.kr/board/powerbbs.php?name=subject&keyword=", "&come_idx=2771", Search_Inven),
             new GameSearchSiteBaseData("인벤_롤_유저팁 게시판", "http://www.inven.co.kr/board/powerbbs.php?name=subject&keyword=", "&come_idx=2766", Search_Inven)
         ))
-)
+) 
 var GameSearchResultData = function(resultSiteName, gameSearchResultBaseDatas)
 {
     this.ResultSiteName = resultSiteName;
@@ -81,9 +81,6 @@ function Search_Inven(loadBody)
 {
     var list = [];
     var parsingFunction = function(index, data) {
-        if(list.length > SearchResultCount)
-            return;
-
         var postTitle = loadBody(data).find(".sj_ln").text();
         var postHref = loadBody(data).find(".sj_ln").attr("href");
         
@@ -99,9 +96,6 @@ function Search_Inven_Champion(loadBody)
 {
     var list = [];
     var parsingFunction = function(index, data) {
-        if(list.length > SearchResultCount)
-            return;
-
         var postTitle = loadBody(data).find(".list").text();
         var postHref = loadBody(data).find(".list").attr("href");
         
@@ -119,9 +113,6 @@ function Search_DC(loadBody)
     var list = [];
     var table = loadBody(".t_subject");
     var parsingFunction = function(index, data) {
-        if(list.length > SearchResultCount)
-            return;
-
         var postTitle = loadBody(data).find("a").text();
         var postHref = loadBody(data).find("a").attr("href");
         
@@ -138,7 +129,6 @@ function Search_DC(loadBody)
 var SearchGameName;
 var SearchKeyword;
 var SearchResultList = [];
-var SearchResultCount = 5;
 var SearchGameData;
 var GlobalResponse;
 function SiteSearchRequest(gameSearchSiteBaseData)
@@ -176,24 +166,33 @@ exports.main_search = function(req,res){
 }
 
 exports.main_search_result = function(req,res){
-    SearchGameName = req.body.GameType;
-    SearchKeyword = req.body.search;
 
-    SearchResultList = [];
-    SearchGameData = null;
-    GlobalResponse = res;
-    for(var index = 0 ;index < GameSearchBaseDatas.length ; ++index)
+    if(req.body.GameType === undefined)
     {
-        if(SearchGameName === GameSearchBaseDatas[index].GameName)
-        {
-            SearchGameData = GameSearchBaseDatas[index];
-        }
-        GameSearchBaseDatas[index].SetGameSearchComplete(false);
+        
     }
-
+    else
+    {
+        SearchGameName = req.body.GameType;
+        SearchKeyword = req.body.search;
     
-    for(var index = 0 ; index < SearchGameData.GameSearchSiteBaseDatas.length ; ++index)
-    {
-        SiteSearchRequest(SearchGameData.GameSearchSiteBaseDatas[index]);
+        SearchResultList = [];
+        SearchGameData = null;
+        GlobalResponse = res;
+        for(var index = 0 ;index < GameSearchBaseDatas.length ; ++index)
+        {
+            if(SearchGameName === GameSearchBaseDatas[index].GameName)
+            {
+                SearchGameData = GameSearchBaseDatas[index];
+            }
+            GameSearchBaseDatas[index].SetGameSearchComplete(false);
+        }
+    
+        
+        for(var index = 0 ; index < SearchGameData.GameSearchSiteBaseDatas.length ; ++index)
+        {
+            SiteSearchRequest(SearchGameData.GameSearchSiteBaseDatas[index]);
+        }
     }
+    
 }

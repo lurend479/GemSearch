@@ -7,6 +7,7 @@ html(lang="ko")
             
             function onClickNextSearch()
             {
+                document.getElementById("result_view").innerHTML = "test";
                 return true;
             }
 
@@ -15,20 +16,20 @@ html(lang="ko")
 
                 resultView += "<table id=" + resultData.ResultSiteName + ">";
                 resultView += "<tr> <th>";
-                resultView += "<h1>" + resultData.ResultSiteName;
+                resultView += "<h1>" + resultData.SiteName;
                 resultView += "</th> </tr>";
-                if(resultData.GameSearchResultBaseDatas.length > 0)
+                if(resultData.SearchResultList.length > 0)
                 {
-                    for(var index = 0 ; index < resultData.GameSearchResultBaseDatas.length ; ++index)
+                    for(var index = 0 ; index < resultData.SearchResultList.length && index < 5; ++index)
                     {
                         resultView += "<tr> <td>";
-                        resultView += "<a href=" + resultData.GameSearchResultBaseDatas[index].ResultUrl + " target=\"_blank\">" 
-                            +  resultData.GameSearchResultBaseDatas[index].ResultStr;
+                        resultView += "<a href=" + resultData.SearchResultList[index].ResultUrl + " target=\"_blank\">" 
+                            +  resultData.SearchResultList[index].ResultStr;
                         resultView += "</td> </tr>";
                     }
 
                     resultView += "<tr> <td>";
-                    resultView += "<form method=\"post\" onsubmit=\"return onClickNextSearch();\">";
+                    resultView += "<form onclick=\"onClickNextSearch();\">";
                     resultView += "<input type=\"submit\" title=\"NEXT\">";
                     resultView += "<form>";
                     resultView += "</td> </tr>";
@@ -44,8 +45,16 @@ html(lang="ko")
 
                 return resultView;
             }
-
+            function ResetData()
+            {
+                for(var index = 0 ; index < rsearchResultList.length; ++index)
+                {
+                    searchResultList.ViewPage = 1;
+                }
+            }
             window.onload = function(){
+        
+
                 var resultView = new String();
 
                 for(var index = 0 ; index < searchResultList.length; ++index)
